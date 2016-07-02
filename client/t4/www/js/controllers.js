@@ -37,10 +37,16 @@ angular.module('starter.controllers', [])
             console.log('user disconnected');
         });
     });
-    socket.emit('hello', 'world');
+
     socket.on('hello', function(msg) {
-        console.log(msg);
-        alert(msg);
+        var d = new Date();
+        d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+        $scope.messages.push({
+            userId: alternate ? '12345' : '54321',
+            text: msg,
+            time: d
+        });
+        $ionicScrollDelegate.scrollBottom(true);
     });
 
     $scope.hideTime = true;
@@ -59,6 +65,7 @@ angular.module('starter.controllers', [])
             text: $scope.data.message,
             time: d
         });
+        socket.emit('hello', $scope.data.message);
 
         delete $scope.data.message;
         $ionicScrollDelegate.scrollBottom(true);
