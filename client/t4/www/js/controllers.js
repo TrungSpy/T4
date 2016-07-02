@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
     socket.on('rooms', function(rooms) {
         console.log(rooms);
         $state.go('tab.chats', {
-            "rooms": rooms
+            "rooms": JSON.parse(rooms)
         });
     });
     $scope.ask = function(keywords) {
@@ -24,16 +24,7 @@ angular.module('starter.controllers', [])
     //});
     if ($stateParams && $stateParams.rooms) {
         console.log($stateParams.rooms);
-    }
-    $scope.chats = Chats.all();
-    $scope.remove = function(chat) {
-        Chats.remove(chat);
-    };
-
-    $scope.goChatroom = function(chatid) {
-        $state.go('helloworld', {
-            "rooms": null
-        });
+        $scope.chats = $stateParams.rooms;
     }
 })
 
@@ -47,7 +38,7 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO, $ionicHistory) {
+.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO, $ionicHistory, $stateParams) {
 
         $scope.data = {};
         $scope.myId = '12345';
@@ -57,6 +48,14 @@ angular.module('starter.controllers', [])
             $ionicHistory.goBack();
         }
         var socket = T4IO.getGlobalIO();
+
+        if ($stateParams && $stateParams.room_name) {
+            console.log($stateParams.room_name);
+            socket.emit('enter_room', $stateParams.room_name);
+            socket.on('enter_room_finished', function(msg) {
+                console.log(msg);
+            });
+        }
 
         socket.on('hello', function(msg) {
             var d = new Date();

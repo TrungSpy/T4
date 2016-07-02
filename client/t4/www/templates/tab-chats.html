@@ -1,10 +1,10 @@
 <ion-view view-title="Chats">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" ui-sref="chatroom({chatid: chat.id})">
-        <img ng-src="{{chat.face}}">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" ui-sref="chatroom({room_name: chat.name})">
+        <img ng-src="img/max.png">
         <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
+        <p>persons: {{chat.count}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(chat)">

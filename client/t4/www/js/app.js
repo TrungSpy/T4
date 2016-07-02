@@ -78,8 +78,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         templateUrl: 'templates/chatroom.html',
         controller: 'ChatroomCtrl',
         params: {
-            productId: null,
-            alreadyWithBackButton: null
+            room_name: null
         }
     })
 
