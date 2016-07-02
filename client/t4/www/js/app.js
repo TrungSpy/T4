@@ -57,7 +57,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     templateUrl: 'templates/tab-chats.html',
                     controller: 'ChatsCtrl'
                 }
-            }
+            },
+            params: { 'hello': null },
         })
         .state('tab.chat-detail', {
             url: '/chats/:chatId',
