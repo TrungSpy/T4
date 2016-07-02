@@ -8,8 +8,9 @@ angular.module('starter.controllers', [])
             hello: "world"
         });
     });
-    $scope.ask = function() {
-        socket.emit('topic', 'where is the God?');
+    $scope.ask = function(keywords) {
+      console.log(keywords);
+        socket.emit('topic', keywords);
     }
 })
 
