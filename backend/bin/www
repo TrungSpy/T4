@@ -7,6 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
+var Heap = require('heap');
+var array = require("array-extended");
+
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 /**
  * Get port from environment and store in Express.
@@ -92,9 +97,71 @@ function onListening() {
 
 var io = require('socket.io')(server);
 
-io.on('connection', function(socket){
-  console.log('a user connected');
-  socket.on('hello', function(msg){
+io.on('connection', function(socket) {
+
+  socket.on('enter', function(room) {
+    socket.join(room);
+    var room = io.sockets.adapter.rooms[room];
+    console.log("number of users in " + room + ": " + room.length);
+  });
+
+  socket.on('leave', function(room) {
+    if (room)
+      socket.leave(room);
+    else
+      socket.leave(socket.id);
+    console.log(socket.rooms);
+    console.log(socket.id);
+  });
+
+  socket.on('topic', function(s) {
+    search_groups(["tokyo"])
+  });
+
+  socket.on('hello', function(msg) {
     socket.broadcast.emit('hello', msg);
   });
 });
+
+function search_groups(group) {
+  MongoClient.connect("mongodb://localhost:27017/sbcloud", function(err, db) {
+    if (err) console.log('database connection error');
+    var groups = db.collection('groups');
+
+    groups.findOne({tags:group}, function(err, g) {
+      groups.find({}, {_id:0}).toArray(function(err, g_all) {
+        if (!g) groups.insert({"tags":group})
+        db.close();
+        g_all = g_all.map(function(u) { return u.tags })
+        tops = topgroups(group, g_all)
+        io.emit("rooms", JSON.stringify(tops));
+      });
+
+    });
+  });
+}
+
+function topgroups(g, groups) {
+  var arr = [];
+  for (i = 0; i < groups.length; i++) {
+    var sim = array(groups[i]).intersect(g).value().length / array(groups[i]).union(g).value().length;
+    arr.push({"group":groups[i], "sim":sim});
+  }
+
+  var heap = new Heap(function(a, b) {
+      return a.sim - b.sim;
+  });
+
+  for (i = 0; i < arr.length; i++) {
+    if (heap.size() < 4)
+      heap.push(arr[i]);
+    else if (heap.top()["sim"] < arr[i]["sim"])
+      heap.replace(arr[i]);
+  }
+  tops = array.sort(heap.toArray(), "sim").reverse();
+  groups = []
+  for (i = 0; i < tops.length; i++)
+    groups.push(tops[i]["group"])
+
+  return groups;
+}
