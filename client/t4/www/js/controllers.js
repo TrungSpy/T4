@@ -29,8 +29,12 @@ angular.module('starter.controllers', [])
 
 .controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate) {
 
+
+    $scope.data = {};
+    $scope.myId = '12345';
+    $scope.messages = [];
+    
     var socket = io('http://47.89.50.63:3000/');
-    alert('Hello world');
     socket.on('connection', function(socket) {
         alert('a user connected');
         socket.on('disconnect', function() {
@@ -42,7 +46,7 @@ angular.module('starter.controllers', [])
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         $scope.messages.push({
-            userId: alternate ? '12345' : '54321',
+            userId: '54321',//other ID
             text: msg,
             time: d
         });
@@ -62,7 +66,7 @@ angular.module('starter.controllers', [])
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
 
         $scope.messages.push({
-            userId: alternate ? '12345' : '54321',
+            userId: $scope.myId,
             text: $scope.data.message,
             time: d
         });
@@ -91,10 +95,6 @@ angular.module('starter.controllers', [])
         // cordova.plugins.Keyboard.close();
     };
 
-
-    $scope.data = {};
-    $scope.myId = '12345';
-    $scope.messages = [];
 })
 
 .directive('input', function($timeout) {
