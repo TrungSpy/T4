@@ -1,4 +1,7 @@
 <ion-view view-title="Chat Room">
+    <ion-nav-buttons side="left">
+        <button class="button button-clear" ng-click="goBack()"><i class="icon ion-ios-arrow-back"></i> Back</button>
+    </ion-nav-buttons>
     <ion-pane "class="messaging-view ">
     <ion-header-bar class="bar-calm ">
       <h1 class="title ">Ioinc Chat</h1>
@@ -9,11 +12,11 @@
                  on-swipe-right="hideTime=true ">
 
       <div ng-repeat="message in messages "
-           ng-class="{other: message.userId !=myId} "
+           ng-class="{ other: message.userId == myId} "
            class="messages ">
 
         <div class="message " ng-class="{ 'slide-right': hideTime, '': !hideTime} ">
-          <span>{{ message.text }}</span>
+          <span class="message-common ">{{ message.text }}</span>
         </div>
 
         <div class="time " ng-class="{ 'slide-right': hideTime, '': !hideTime} ">{{message.time}}</div>
