@@ -46,6 +46,7 @@ angular.module('starter.controllers', [])
             text: msg,
             time: d
         });
+        $scope.$apply();
         $ionicScrollDelegate.scrollBottom(true);
     });
 
