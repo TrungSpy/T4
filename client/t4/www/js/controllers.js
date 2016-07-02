@@ -25,7 +25,9 @@ angular.module('starter.controllers', [])
     $scope.settings = {
         enableFriends: true
     };
+})
 
+.controller('ChatroomCtrl', function($scope) {
 
     var socket = io('http://47.89.50.63:3000/');
     alert('Hello world');

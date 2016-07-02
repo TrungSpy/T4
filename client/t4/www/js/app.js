@@ -69,6 +69,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             }
         })
 
+    .state('tab.chatroom', {
+        url: '/chatroom',
+        views: {
+            'tab-chatroom': {
+                templateUrl: 'templates/tab-chatroom.html',
+                controller: 'ChatroomCtrl'
+            }
+        }
+    })
+
     .state('tab.account', {
         url: '/account',
         views: {
