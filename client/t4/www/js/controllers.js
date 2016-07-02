@@ -2,10 +2,10 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $state, T4IO) {
     var socket = T4IO.getGlobalIO();
-    socket.on('rooms', function(msg) {
-        console.log(msg);
+    socket.on('rooms', function(rooms) {
+        console.log(rooms);
         $state.go('tab.chats', {
-            hello: "world"
+            "rooms": rooms
         });
     });
     $scope.ask = function(keywords) {
@@ -22,8 +22,8 @@ angular.module('starter.controllers', [])
     //
     //$scope.$on('$ionicView.enter', function(e) {
     //});
-    if ($stateParams && $stateParams.hello) {
-        console.log($stateParams.hello);
+    if ($stateParams && $stateParams.rooms) {
+        console.log($stateParams.rooms);
     }
     $scope.chats = Chats.all();
     $scope.remove = function(chat) {

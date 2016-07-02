@@ -58,7 +58,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     controller: 'ChatsCtrl'
                 }
             },
-            params: { 'hello': null },
+            params: {
+                'rooms': null
+            },
         })
         .state('tab.chat-detail', {
             url: '/chats/:chatId',
@@ -69,6 +71,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 }
             }
         })
+
 
     .state('tab.chatroom', {
         url: '/chatroom',
