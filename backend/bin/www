@@ -99,19 +99,13 @@ var io = require('socket.io')(server);
 
 io.on('connection', function(socket) {
 
-  socket.on('enter', function(room) {
+  socket.on('enter_room', function(room) {
+    var rooms = socket.rooms;
+    for(i = 0; i < rooms.length; i++)
+      socket.leave(rooms[i])
     socket.join(room);
-    var room = io.sockets.adapter.rooms[room];
-    console.log("number of users in " + room + ": " + room.length);
-  });
 
-  socket.on('leave', function(room) {
-    if (room)
-      socket.leave(room);
-    else
-      socket.leave(socket.id);
-    console.log(socket.rooms);
-    console.log(socket.id);
+    io.emit("enter_room_finished", "");
   });
 
   //socket.on('topic', function(s) {
@@ -119,7 +113,8 @@ io.on('connection', function(socket) {
   //});
 
   socket.on('hello', function(msg) {
-    socket.broadcast.emit('hello', msg);
+    var room_id = Object.keys(socket.rooms)[0];
+    socket.broadcast.to(room_id).emit('hello', msg);
   });
 
   socket.on("topic", function(question) {
@@ -139,7 +134,13 @@ function search_groups(group) {
         db.close();
         g_all = g_all.map(function(u) { return u.tags })
         tops = topgroups(group, g_all)
-        io.emit("rooms", JSON.stringify(tops));
+        result = []
+        for (i = 0; i < tops.length; i++) {
+          var count = io.sockets.adapter.rooms[tops[i]];
+          if (!count) count = 0;
+          result.push({"name": tops[i], "count": count})
+        }
+        io.emit("rooms", JSON.stringify(result));
       });
 
     });
@@ -166,7 +167,7 @@ function topgroups(g, groups) {
   tops = array.sort(heap.toArray(), "sim").reverse();
   groups = []
   for (i = 0; i < tops.length; i++)
-    groups.push(tops[i]["group"])
+    groups.push(tops[i]["group"].join("."))
 
   return groups;
 }
