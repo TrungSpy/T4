@@ -96,7 +96,7 @@ function onListening() {
 
 
 var io = require('socket.io')(server);
-
+var current_room = "";
 io.on('connection', function(socket) {
 
   socket.on('enter_room', function(room) {
@@ -104,7 +104,7 @@ io.on('connection', function(socket) {
     for(i = 0; i < rooms.length; i++)
       socket.leave(rooms[i])
     socket.join(room);
-
+    current_room = room;
     io.emit("enter_room_finished", "");
   });
 
@@ -113,8 +113,8 @@ io.on('connection', function(socket) {
   //});
 
   socket.on('hello', function(msg) {
-    var room_id = Object.keys(socket.rooms)[0];
-    socket.broadcast.to(room_id).emit('hello', msg);
+    var room_id = Object.keys(socket.rooms)[0];  
+    socket.broadcast.to(current_room).emit('hello', msg);
   });
 
   socket.on("topic", function(question) {
