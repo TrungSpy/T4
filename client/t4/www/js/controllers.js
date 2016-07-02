@@ -9,12 +9,12 @@ angular.module('starter.controllers', [])
         });
     });
     $scope.ask = function(keywords) {
-      console.log(keywords);
+        console.log(keywords);
         socket.emit('topic', keywords);
     }
 })
 
-.controller('ChatsCtrl', function($scope, Chats, $stateParams) {
+.controller('ChatsCtrl', function($scope, Chats, $stateParams, $state) {
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
@@ -29,6 +29,12 @@ angular.module('starter.controllers', [])
     $scope.remove = function(chat) {
         Chats.remove(chat);
     };
+
+    $scope.goChatroom = function(chatid) {
+        $state.go('helloworld', {
+            "rooms": null
+        });
+    }
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
@@ -41,12 +47,15 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO) {
+.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO, $ionicHistory) {
 
         $scope.data = {};
         $scope.myId = '12345';
         $scope.messages = [];
 
+        $scope.goBack = function() {
+            $ionicHistory.goBack();
+        }
         var socket = T4IO.getGlobalIO();
 
         socket.on('hello', function(msg) {

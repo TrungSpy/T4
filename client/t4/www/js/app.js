@@ -72,14 +72,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             }
         })
 
-
-    .state('tab.chatroom', {
+    .state('chatroom', {
         url: '/chatroom',
-        views: {
-            'tab-chatroom': {
-                templateUrl: 'templates/tab-chatroom.html',
-                controller: 'ChatroomCtrl'
-            }
+        cache: false,
+        templateUrl: 'templates/chatroom.html',
+        controller: 'ChatroomCtrl',
+        params: {
+            productId: null,
+            alreadyWithBackButton: null
         }
     })
 
