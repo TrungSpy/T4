@@ -114,9 +114,9 @@ io.on('connection', function(socket) {
     console.log(socket.id);
   });
 
-  socket.on('topic', function(s) {
-    search_groups(["tokyo"])
-  });
+  //socket.on('topic', function(s) {
+  //  search_groups(["tokyo"])
+  //});
 
   socket.on('hello', function(msg) {
     socket.broadcast.emit('hello', msg);
