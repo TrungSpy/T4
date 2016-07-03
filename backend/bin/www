@@ -109,7 +109,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('topic', function(question) {
-   search_groups(question.split(), socket);
+   search_groups(question.toLowerCase().split(" "), socket);
   });
 
   socket.on('hello', function(msg) {
