@@ -104,3 +104,54 @@ input#message-input {
     text-align: center;
     border-width: 0;
 }
+
+
+.title-navbar {
+    background-image: -moz-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%)! Important;
+    background-image: -webkit-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%)! Important;
+    background-image: -ms-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%)! Important;
+    width: 100%;
+    height: 44px;
+}
+
+#title-navbar div.title {
+    color : white;
+}
+
+#account-view {
+    background-image: url("../img/account-bg.png");
+}
+
+#account-view ion-item{
+    background-color: inherit;
+    color: white;
+    height: 600px;
+}
+
+.profile_image {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  width: 120px;
+  height: 120px;
+  z-index: 100;
+  text-align: left;
+}
+
+.profile_image span{
+    position: absolute;
+    left: 30px;
+    top: 100px;
+    z-index: 100;
+    color: #fdfdfe;
+    font-size: 20px;
+}
+
+.profile_image #subspan{
+    position: absolute;
+    left: 30px;
+    top: 130px;
+    z-index: 100;
+    color: #818c9a;
+    font-size: 16px;
+}

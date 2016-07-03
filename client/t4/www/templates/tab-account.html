@@ -1,15 +1,15 @@
 <ion-view view-title="Account">
-    <ion-content>
-        <ion-item class="item t4avatar">
-            <img ng-src="img/me.jpeg" style="width: 64px; height: 64px">
-        </ion-item>
-        <ion-item class="item t4avatar">
-            <span>Hi, I am Alex</span>
-        </ion-item>
-        <ion-list>
+    <ion-content id="account-view">
+
+        <div class="profile_image">
+            <img ng-src="img/me.png" style="width: 120px; height: 120px">
+            <span>Alex</span>
+            <span id="subspan">Engineer</span>
+        </div>
+        <!-- <ion-list>
             <ion-toggle ng-model="settings.enableFriends">
                 Enable Notification
             </ion-toggle>
-        </ion-list>
+        </ion-list> -->
     </ion-content>
 </ion-view>
