@@ -126,7 +126,7 @@ function search_groups(group, func) {
     MongoClient.connect("mongodb://localhost:27017/sbcloud", function(err, db) {
         if (err) console.log('database connection error');
         var groups = db.collection('groups');
-        var group_copy = group
+        var group_copy = group.slice()
         while (group_copy.length > 0) {
             groups.update({"tags": group_copy}, {"tags": group_copy}, {upsert: true});
             group_copy.pop();
@@ -153,7 +153,6 @@ function topgroups(g, groups) {
         var sim = array(groups[i]).intersect(g).value().length / array(groups[i]).union(g).value().length;
         arr.push({"group": groups[i], "sim": sim});
     }
-
     var heap = new Heap(function(a, b) {
         return a.sim - b.sim;
     });
