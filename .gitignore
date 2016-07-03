@@ -1,2 +1,2 @@
-backend/bin/*.log
+backend/npm-debug.log
 backend/node_modules/
