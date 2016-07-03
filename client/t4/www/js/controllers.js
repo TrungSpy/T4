@@ -58,6 +58,17 @@ angular.module('starter.controllers', [])
         $scope.myId = '12345';
         $scope.messages = [];
 
+        function makename() {
+            var text = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz";
+
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+        var myname = makename();
+
         $scope.goBack = function() {
             $ionicHistory.goBack();
         }
@@ -72,13 +83,14 @@ angular.module('starter.controllers', [])
         }
 
         socket.on('hello', function(msg) {
+          var get_message = JSON.parse(msg);
             var d = new Date();
             d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
             $scope.messages.push({
                 userId: '54321', //other ID
-                text: msg,
+                text: get_message.message,
                 time: d,
-                name: 'alex'
+                name: get_message.name
             });
             $scope.$apply();
             $ionicScrollDelegate.scrollBottom(true);
@@ -111,9 +123,13 @@ angular.module('starter.controllers', [])
                     userId: $scope.myId,
                     text: $scope.data.message,
                     time: d,
-                    name: 'alex'
+                    name: myname
                 });
-                socket.emit('hello', $scope.data.message);
+                var post_message = JSON.stringify({
+                    message: $scope.data.message,
+                    name: myname
+                })
+                socket.emit('hello', post_message);
 
                 delete $scope.data.message;
                 $ionicScrollDelegate.scrollBottom(true);

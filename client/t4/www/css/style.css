@@ -75,7 +75,7 @@
     transform: translate3d(120px, 0, 0) !important;
 }
 
-.messages.other span {
+.messages.other span:not(.message-name){
     color: white !important;
     background-color: #007AFF !important;
 }
@@ -90,8 +90,8 @@ span.message-common {
     max-width: 240px !important;
 }
 
-span.message-bold {
-    font-weight: bold;
+.messages.other span.message-name{
+    color: gray !important;
 }
 
 input#message-input {
