@@ -1,9 +1,11 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Ask Question">
     <ion-content class="padding">
         <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
             <input ng-model="keywords" type="search" placeholder="Search">
         </label>
-        <button ng-click="ask(keywords)">Ask</button>
+        <div class="item t4ask text-center">
+            <button class="button button-outline button-positive" ng-click="ask(keywords) ">Ask</button>
+      </div>
     </ion-content>
 </ion-view>
