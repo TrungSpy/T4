@@ -1,0 +1,2 @@
+backend/bin/*.log
+backend/node_modules/
