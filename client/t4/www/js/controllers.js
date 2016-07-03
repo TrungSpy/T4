@@ -77,7 +77,8 @@ angular.module('starter.controllers', [])
             $scope.messages.push({
                 userId: '54321', //other ID
                 text: msg,
-                time: d
+                time: d,
+                name: 'alex'
             });
             $scope.$apply();
             $ionicScrollDelegate.scrollBottom(true);
@@ -109,7 +110,8 @@ angular.module('starter.controllers', [])
                 $scope.messages.push({
                     userId: $scope.myId,
                     text: $scope.data.message,
-                    time: d
+                    time: d,
+                    name: 'alex'
                 });
                 socket.emit('hello', $scope.data.message);
 

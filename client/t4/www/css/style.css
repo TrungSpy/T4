@@ -90,6 +90,10 @@ span.message-common {
     max-width: 240px !important;
 }
 
+span.message-bold {
+    font-weight: bold;
+}
+
 input#message-input {
     width: 100%;
 }

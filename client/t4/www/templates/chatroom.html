@@ -16,7 +16,7 @@
            class="messages ">
 
         <div class="message " ng-class="{ 'slide-right': hideTime, '': !hideTime} ">
-          <span class="message-common ">{{ message.text }}</span>
+          <span class="message-common ">{{ message.text }}<span class="message-bold">{{message.name}}</span></span>
         </div>
 
         <div class="time " ng-class="{ 'slide-right': hideTime, '': !hideTime} ">{{message.time}}</div>
