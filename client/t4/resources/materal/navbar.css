@@ -1,0 +1,12 @@
+.navbar {
+  background-image: -moz-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  background-image: -webkit-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  background-image: -ms-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  box-shadow: inset 41.871px -59.798px 76px 0px rgba(0, 0, 0, 0.27);
+  position: absolute;
+  left: 1930px;
+  top: 3069px;
+  width: 750px;
+  height: 236px;
+  z-index: 82;
+}

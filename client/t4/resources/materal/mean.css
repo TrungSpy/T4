@@ -1,0 +1,69 @@
+.menu_font {
+  font-size: 44px;
+  font-family: "TitilliumWeb";
+  color: rgb(255, 255, 255);
+  line-height: 1.2;
+  text-align: left;
+  position: absolute;
+  left: 1192.552px;
+  top: 1084.772px;
+  z-index: 737;
+}
+
+.menu_font_selected {
+  font-size: 44px;
+  font-family: "TitilliumWeb";
+  color: rgb(255, 255, 255);
+  line-height: 1.2;
+  text-align: left;
+  position: absolute;
+  left: 1239.937px;
+  top: 954.772px;
+  z-index: 736;
+}
+
+.menu_selected {
+  background-image: -moz-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  background-image: -webkit-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  background-image: -ms-linear-gradient( 0deg, rgb(232,121,117) 0%, rgb(243,199,161) 100%);
+  position: absolute;
+  left: 1167px;
+  top: 924px;
+  width: 64px;
+  height: 115px;
+  z-index: 734;
+}
+
+._18 {
+  font-size: 30px;
+  font-family: "TitilliumWeb";
+  color: rgb(255, 255, 255);
+  line-height: 1.2;
+  text-align: left;
+  position: absolute;
+  left: 1331.804px;
+  top: 574px;
+  z-index: 730;
+}
+
+.rounded {
+  background-color: rgb(231, 124, 110);
+  position: absolute;
+  left: 1320px;
+  top: 568px;
+  width: 62px;
+  height: 50px;
+  z-index: 729;
+}
+
+.background {
+  background-image: -moz-linear-gradient( 148deg, rgb(0,0,0) 0%, rgb(255,255,255) 100%);
+  background-image: -webkit-linear-gradient( 148deg, rgb(0,0,0) 0%, rgb(255,255,255) 100%);
+  background-image: -ms-linear-gradient( 148deg, rgb(0,0,0) 0%, rgb(255,255,255) 100%);
+  position: absolute;
+  left: 1105px;
+  top: 251px;
+  width: 750px;
+  height: 1334px;
+  z-index: 721;
+}

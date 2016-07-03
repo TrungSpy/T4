@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $state, T4IO) {
+.controller('DashCtrl', function($scope, $state, T4IO, $ionicPopup) {
     var socket = T4IO.getGlobalIO();
     socket.on('rooms', function(rooms) {
         console.log(rooms);
@@ -8,9 +8,23 @@ angular.module('starter.controllers', [])
             "rooms": JSON.parse(rooms)
         });
     });
+    var showAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: '',
+            template: 'Please enter the question you want to ask.'
+        });
+
+        alertPopup.then(function(res) {
+            console.log('Thank you for not eating my delicious ice cream cone');
+        });
+    };
     $scope.ask = function(keywords) {
         console.log(keywords);
-        socket.emit('topic', keywords);
+        if (keywords && keywords.trim() != "") {
+            socket.emit('topic', keywords);
+        } else {
+            showAlert();
+        }
     }
 })
 
@@ -38,7 +52,7 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO, $ionicHistory, $stateParams) {
+.controller('ChatroomCtrl', function($scope, $timeout, $ionicScrollDelegate, T4IO, $ionicHistory, $stateParams, $ionicPopup) {
 
         $scope.data = {};
         $scope.myId = '12345';
@@ -74,21 +88,36 @@ angular.module('starter.controllers', [])
         var alternate,
             isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
-        $scope.sendMessage = function() {
-            alternate = !alternate;
-
-            var d = new Date();
-            d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-
-            $scope.messages.push({
-                userId: $scope.myId,
-                text: $scope.data.message,
-                time: d
+        var showAlert = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: '',
+                template: 'Please enter message.'
             });
-            socket.emit('hello', $scope.data.message);
 
-            delete $scope.data.message;
-            $ionicScrollDelegate.scrollBottom(true);
+            alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone');
+            });
+        };
+
+        $scope.sendMessage = function() {
+            if ($scope.data.message && $scope.data.message.trim() != "") {
+                alternate = !alternate;
+
+                var d = new Date();
+                d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+
+                $scope.messages.push({
+                    userId: $scope.myId,
+                    text: $scope.data.message,
+                    time: d
+                });
+                socket.emit('hello', $scope.data.message);
+
+                delete $scope.data.message;
+                $ionicScrollDelegate.scrollBottom(true);
+            } else {
+                showAlert();
+            }
 
         };
 
