@@ -81,11 +81,21 @@
 }
 
 span.message-common {
-  background: #C7C7CC !important;
-  display: inline-block !important;
-  color: black !important;
-  padding: 10px !important;
-  border-radius: 10px !important;
-  text-align: left !important;
-  max-width: 240px !important;
+    background: #C7C7CC !important;
+    display: inline-block !important;
+    color: black !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+    text-align: left !important;
+    max-width: 240px !important;
+}
+
+input#message-input {
+    width: 100%;
+}
+
+.item.t4ask {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
 }
