@@ -105,25 +105,20 @@ io.on('connection', function(socket) {
       socket.leave(rooms[i])
     socket.join(room);
     current_room = room;
-    io.emit("enter_room_finished", "");
+    socket.emit("enter_room_finished", "");
   });
 
-  //socket.on('topic', function(s) {
-  //  search_groups(["tokyo"])
-  //});
+  socket.on('topic', function(question) {
+   search_groups(question.toLowerCase().split(" "), socket);
+  });
 
   socket.on('hello', function(msg) {
     var room_id = Object.keys(socket.rooms)[0];  
     socket.broadcast.to(current_room).emit('hello', msg);
   });
-
-  socket.on("topic", function(question) {
-    groups = [{'name':"room1", 'count':1},{"name":"room2", "count":2}, {"name":"room3", "count":10}];
-    socket.emit("rooms", JSON.stringify(groups));
-  });
 });
 
-function search_groups(group) {
+function search_groups(group, socket) {
   MongoClient.connect("mongodb://localhost:27017/sbcloud", function(err, db) {
     if (err) console.log('database connection error');
     var groups = db.collection('groups');
@@ -137,10 +132,10 @@ function search_groups(group) {
         result = []
         for (i = 0; i < tops.length; i++) {
           var count = io.sockets.adapter.rooms[tops[i]];
-          if (!count) count = 0;
+          count = count ? count.length : 0;
           result.push({"name": tops[i], "count": count})
         }
-        io.emit("rooms", JSON.stringify(result));
+        socket.emit("rooms", JSON.stringify(result));
       });
 
     });
