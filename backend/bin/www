@@ -9,6 +9,7 @@ var debug = require('debug')('backend:server');
 var http = require('http');
 var Heap = require('heap');
 var array = require("array-extended");
+var request = require('request');
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -39,19 +40,19 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+    var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -59,27 +60,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    var bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
 
 /**
@@ -87,82 +88,106 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    var addr = server.address();
+    var bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    debug('Listening on ' + bind);
 }
 
 
 var io = require('socket.io')(server);
 var current_room = "";
 io.on('connection', function(socket) {
+    socket.on('enter_room', function(room) {
+        var rooms = socket.rooms;
+        for (i = 0; i < rooms.length; i++)
+            socket.leave(rooms[i])
+        socket.join(room);
+        current_room = room;
+        socket.emit("enter_room_finished", "");
+    });
 
-  socket.on('enter_room', function(room) {
-    var rooms = socket.rooms;
-    for(i = 0; i < rooms.length; i++)
-      socket.leave(rooms[i])
-    socket.join(room);
-    current_room = room;
-    socket.emit("enter_room_finished", "");
-  });
+    socket.on('topic', function(question) {
+        if (!question.trim()) return;
+        request_topic(question, function(g) {
+            search_groups(g, function(result) {
+                socket.emit("rooms", JSON.stringify(result));
+            });
+        });
+    });
 
-  socket.on('topic', function(question) {
-   search_groups(question.toLowerCase().split(" "), socket);
-  });
-
-  socket.on('hello', function(msg) {
-    var room_id = Object.keys(socket.rooms)[0];  
-    socket.broadcast.to(current_room).emit('hello', msg);
-  });
+    socket.on('hello', function(msg) {
+        socket.broadcast.to(current_room).emit('hello', msg);
+    });
 });
 
-function search_groups(group, socket) {
-  MongoClient.connect("mongodb://localhost:27017/sbcloud", function(err, db) {
-    if (err) console.log('database connection error');
-    var groups = db.collection('groups');
+function search_groups(group, func) {
+    MongoClient.connect("mongodb://localhost:27017/sbcloud", function(err, db) {
+        if (err) console.log('database connection error');
+        var groups = db.collection('groups');
 
-    groups.findOne({tags:group}, function(err, g) {
-      groups.find({}, {_id:0}).toArray(function(err, g_all) {
-        if (!g) groups.insert({"tags":group})
-        db.close();
-        g_all = g_all.map(function(u) { return u.tags })
-        tops = topgroups(group, g_all)
-        result = []
-        for (i = 0; i < tops.length; i++) {
-          var count = io.sockets.adapter.rooms[tops[i]];
-          count = count ? count.length : 0;
-          result.push({"name": tops[i], "count": count})
-        }
-        socket.emit("rooms", JSON.stringify(result));
-      });
+        groups.findOne({tags: group}, function(err, g) {
+            groups.find({}, {_id: 0}).toArray(function(err, g_all) {
+                if (!g) groups.insert({"tags": group})
+                db.close();
+                g_all = g_all.map(function(u) {return u.tags;})
+                tops = topgroups(group, g_all);
+                result = []
+                for (i = 0; i < tops.length; i++) {
+                    var count = io.sockets.adapter.rooms[tops[i]];
+                    count = count ? count.length : 0;
+                    result.push({"name": tops[i], "count": count})
+                }
+                func(result);
+            });
 
+        });
     });
-  });
 }
 
 function topgroups(g, groups) {
-  var arr = [];
-  for (i = 0; i < groups.length; i++) {
-    var sim = array(groups[i]).intersect(g).value().length / array(groups[i]).union(g).value().length;
-    arr.push({"group":groups[i], "sim":sim});
-  }
+    var arr = [];
+    for (i = 0; i < groups.length; i++) {
+        var sim = array(groups[i]).intersect(g).value().length / array(groups[i]).union(g).value().length;
+        arr.push({"group": groups[i], "sim": sim});
+    }
 
-  var heap = new Heap(function(a, b) {
-      return a.sim - b.sim;
-  });
+    var heap = new Heap(function(a, b) {
+        return a.sim - b.sim;
+    });
 
-  for (i = 0; i < arr.length; i++) {
-    if (heap.size() < 4)
-      heap.push(arr[i]);
-    else if (heap.top()["sim"] < arr[i]["sim"])
-      heap.replace(arr[i]);
-  }
-  tops = array.sort(heap.toArray(), "sim").reverse();
-  groups = []
-  for (i = 0; i < tops.length; i++)
-    groups.push(tops[i]["group"].join("."))
+    for (i = 0; i < arr.length; i++) {
+        if (heap.size() < 4)
+            heap.push(arr[i]);
+        else if (heap.top()["sim"] < arr[i]["sim"])
+            heap.replace(arr[i]);
+    }
+    tops = array.sort(heap.toArray(), "sim").reverse();
+    groups = []
+    for (i = 0; i < tops.length; i++)
+        groups.push(tops[i]["group"].join(" > "))
 
-  return groups;
+    return groups;
+}
+
+function request_topic(s, func) {
+    var headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+    }
+
+    var options = {
+        url: 'http://prophet.100intl.co.jp:8000/queries.json',
+        method: 'POST',
+        headers: headers,
+        json: {"text": "Where can I buy a cheap TOTO toilet seat in Osaka?"},
+    };
+
+    var req = request(options, function(err, res, body) {
+        if (!err && res.statusCode == 200) {
+            // Print out the response body
+            func(body.category.split("."));
+        }
+    });
 }
