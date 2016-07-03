@@ -99,3 +99,8 @@ input#message-input {
     border-left: 0;
     border-right: 0;
 }
+
+.item.t4avatar {
+    text-align: center;
+    border-width: 0;
+}
