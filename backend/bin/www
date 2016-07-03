@@ -166,7 +166,7 @@ function topgroups(g, groups) {
     tops = array.sort(heap.toArray(), "sim").reverse();
     groups = []
     for (i = 0; i < tops.length; i++)
-        groups.push(tops[i]["group"].join(" > "))
+        groups.push(tops[i]["group"].map(mapping).join(" > "))
 
     return groups;
 }
@@ -190,4 +190,13 @@ function request_topic(s, func) {
             func(body.category.split("."));
         }
     });
+}
+
+function mapping(s) {
+    var m = {"comp":"computer", "os":"operating system", "sys":"system", "misc": "miscellaneous",
+         "autos":"cars", "sci":"science", "rec":"entertainment", "talk":"talk show", "forsale":"shopping",
+         "soc":"social", "med":"medicine", "crypt":"cryption"};
+    var mapped = m[s];
+    mapped = mapped ? mapped : s;
+    return mapped.charAt(0).toUpperCase() + mapped.slice(1).toLowerCase();
 }
